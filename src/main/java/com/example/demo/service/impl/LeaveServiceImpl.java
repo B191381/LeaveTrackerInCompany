@@ -1,5 +1,8 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.aop.LeaveApplicationException;
+import com.example.demo.aop.LeaveNotFoundException;
+import com.example.demo.dto.commentRequest;
 import com.example.demo.model.Employee;
 import com.example.demo.model.LeaveApplication;
 import com.example.demo.model.LeaveStatus;
@@ -23,8 +26,9 @@ public class LeaveServiceImpl implements LeaveService {
         private EmployeeRepository employeeRepository;
 
 
-        public LeaveApplication applyLeave(LeaveApplication leaveApplication) {
-            return leaveRepository.save(leaveApplication);
+        public String applyLeave(LeaveApplication leaveApplication) {
+            leaveRepository.save(leaveApplication);
+            return "leave applied";
         }
 
         public List<LeaveApplication> getEmployeeLeaves(Long employeeId) {
@@ -36,7 +40,30 @@ public class LeaveServiceImpl implements LeaveService {
         }
 
         public Optional<LeaveApplication> findById(Long id) {
-            return leaveRepository.findById(id);
+            try {
+                return leaveRepository.findById(id)
+                        .or(() -> {
+                            throw new LeaveNotFoundException("Leave application not found with ID: " + id);
+                        });
+            } catch (Exception e) {
+                throw new LeaveApplicationException("Error fetching leave application: " + e.getMessage(), e);
+            }
+        }
+
+        public String leaveApprove(Long leaveid, commentRequest request) {
+            LeaveApplication leave = leaveRepository.findById(leaveid).orElseThrow();
+            leave.setStatus(LeaveStatus.APPROVED);
+            leave.setManagerComments(request.getComment());
+            leaveRepository.save(leave);
+            return "leave approved";
+        }
+
+        public String leaveReject(Long leaveid, commentRequest request) {
+            LeaveApplication leave = leaveRepository.findById(leaveid).orElseThrow();
+            leave.setStatus(LeaveStatus.REJECTED);
+            leave.setManagerComments(request.getComment());
+            leaveRepository.save(leave);
+            return "Leave Rejected";
         }
 
         public void save(LeaveApplication leave) {

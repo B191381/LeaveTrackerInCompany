@@ -1,6 +1,7 @@
 package com.example.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,7 +23,6 @@ public class Employee {
     private String dateOfJoining;
     @ManyToOne
     @JoinColumn(name="manager_id")
-    @JsonIgnore
     private Manager manager;
 
 

@@ -1,6 +1,7 @@
 package com.example.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -17,7 +18,6 @@ public class LeaveApplication {
 
     @ManyToOne
     @JoinColumn(name = "employee_id")
-    @JsonIgnore
     private Employee employee;
 
     @Column(name = "leave_type")

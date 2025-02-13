@@ -29,8 +29,8 @@ public class EmployeeController {
     }
 
     @PostMapping("/applyleave")
-    public LeaveApplication applyLeave(@RequestBody LeaveApplication leaveApplication) {
-        return leaveService.applyLeave(leaveApplication);
+    public String applyLeave(@RequestBody LeaveApplication leaveApplication) {
+         return leaveService.applyLeave(leaveApplication);
     }
 
     @GetMapping("leavehistory/{employeeId}")

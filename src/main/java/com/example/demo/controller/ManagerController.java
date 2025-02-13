@@ -28,22 +28,14 @@ public class ManagerController {
         return leaveService.findAll();
     }
 
-    @PutMapping("/approve/{leaveId}")
-    public String approveLeave(@PathVariable Long leaveId, @RequestBody commentRequest request) {
-        LeaveApplication leave = leaveService.findById(leaveId).orElseThrow();
-        leave.setStatus(LeaveStatus.APPROVED);
-        leave.setManagerComments(request.getComment());
-        leaveService.save(leave);
-        return "Leave Approved";
 
+    @PutMapping("/approve/{leaveid}")
+    public String leaveApprove(@PathVariable Long leaveid, @RequestBody commentRequest request) {
+        return leaveService.leaveApprove(leaveid,request);
     }
 
-    @PutMapping("/reject/{leaveId}")
-    public String rejectLeave(@PathVariable Long leaveId, @RequestBody commentRequest request) {
-        LeaveApplication leave = leaveService.findById(leaveId).orElseThrow();
-        leave.setStatus(LeaveStatus.REJECTED);
-        leave.setManagerComments(request.getComment());
-        leaveService.save(leave);
-        return "Leave Rejected";
+    @PutMapping("/reject/{leaveid}")
+    public String leaveReject(@PathVariable Long leaveid, @RequestBody commentRequest request) {
+        return leaveService.leaveReject(leaveid,request);
     }
 }
